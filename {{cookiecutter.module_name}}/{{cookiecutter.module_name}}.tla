@@ -166,9 +166,4 @@ Spec == Init /\ [][Next]_vars
 
 =============================================================================
 \* Modification History
-\* Created by Your Name
-
-
-=============================================================================
-\* Modification History
 \* Created by {{cookiecutter.author}}
