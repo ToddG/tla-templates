@@ -1,17 +1,17 @@
 ------------------------------ MODULE {{cookiecutter.module_name}}  ------------------------------
 EXTENDS TLC
+PT == INSTANCE PT
 LOCAL INSTANCE FiniteSets
 LOCAL INSTANCE Integers
 LOCAL INSTANCE Sequences
 LOCAL INSTANCE Naturals
 
-CONSTANT Procs          \* set of processors
-ASSUME Cardinality(Procs) > 0
-CONSTANT MaxValue       \* maximum value to increment to, 1..Nat
-ASSUME MaxValue \in Nat \ {0}
-\* TODO: add constants here and initialize in the `.cfg` file
-\* CONSTANT A      \* TODO
-\* CONSTANT B      \* add
+CONSTANT Procs                  \* set of processors
+ASSUME Cardinality(Procs) > 0   \* should have 1 or more processors
+CONSTANT MaxValue               \* maximum value to increment to
+ASSUME MaxValue \in Nat \ {0}   \* maximum value should be in 1..Nat
+
+\* TODO: add more constants here and initialize in the `.cfg` file
 
 \* ---------------------------------------------------------------------------
 \* Safety checks (INVARIANTS)
@@ -36,8 +36,12 @@ variables
 define
     ProcValuesNeverExceedMaxValue ==
         \A p \in Procs : ~(proc_values[p] > MaxValue)
+    MaxValueIsAlwaysGreatest ==
+        \A p \in Procs : PT!Max(proc_values[p], MaxValue) = MaxValue
+    Invariants ==
+        /\ ProcValuesNeverExceedMaxValue
+        /\ MaxValueIsAlwaysGreatest
 end define;
-
 
 \* ---------------------------------------------------------------------------
 \* macros can be called by procedures and processes
