@@ -6,6 +6,8 @@ LOCAL INSTANCE Integers
 LOCAL INSTANCE Sequences
 LOCAL INSTANCE Naturals
 
+CONSTANT Debug                  \* if TRUE then print debug stuff
+ASSUME Debug \in {TRUE, FALSE}
 CONSTANT Procs                  \* set of processors
 ASSUME Cardinality(Procs) > 0   \* should have 1 or more processors
 CONSTANT MaxValue               \* maximum value to increment to
@@ -28,7 +30,7 @@ ASSUME MaxValue \in Nat \ {0}   \* maximum value should be in 1..Nat
 \* variables
 \* ---------------------------------------------------------------------------
 variables
-    proc_values = [p \in Procs |-> 0]
+    proc_values = [p \in Procs |-> 0];
 
 \* ---------------------------------------------------------------------------
 \* defines (INVARIANTS)
@@ -50,6 +52,16 @@ macro increment(x) begin
     x := x + 1
 end macro;
 
+macro debug(name) begin
+    if Debug then
+        print("----");
+        print("Name: " \o ToString(name));
+        print("Self: " \o ToString(self));
+        print("Procs: " \o ToString(Procs));
+        print("proc_values: " \o ToString(proc_values));
+    end if;
+end macro;
+
 \* ---------------------------------------------------------------------------
 \* procedures can be called by processes (and can call macros)
 \* ---------------------------------------------------------------------------
@@ -67,6 +79,7 @@ procedure do_increment(x, proc)
     variables procedure_local_y_not_used = 0;
     begin
         ProcedureLabel1:
+            debug("ProcedureLabel1");
             if x < MaxValue then
                 x := x + 1;
                 proc_values[proc] := x;
